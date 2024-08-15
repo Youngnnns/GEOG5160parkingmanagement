@@ -22,10 +22,10 @@ This project is a Django-based web application designed to manage parking spaces
 
 ## Technologies Used
 
-- **Python**: 3.x
-- **Django**: 3.x
+- **Python**: 3.12
+- **Django**: 5.1
 - **Bootstrap**: for frontend design
-- **SQLite**: default database, can be replaced with PostgreSQL or MySQL
+- **SQLite**: PostgreSQL
 - **GitHub Actions**: for CI/CD
 
 ## Installation
