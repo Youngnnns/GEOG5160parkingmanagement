@@ -1,0 +1,308 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve Parking</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 50%; /* Adjust the width of the form container */
+            margin: 5% auto;
+            padding: 2%;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-title {
+            color: #333;
+            font-size: 24px; /* Larger font size for title */
+            text-align: center;
+            margin-bottom: 20px; /* More space below the title */
+        }
+        .form-control {
+            border-radius: 5px;
+            font-size: 16px; /* Larger font size for form inputs */
+        }
+        .btn-primary {
+            width: 100%; /* Full-width button */
+            padding: 10px; /* Larger padding for better touch interaction */
+            font-size: 18px; /* Larger font size for button text */
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            var images = [
+                "{% static 'images/1.jpg' %}",
+                "{% static 'images/2.jpg' %}",
+                "{% static 'images/4.jpg' %}",
+                "{% static 'images/5.jpg' %}",
+                "{% static 'images/6.jpg' %}",
+                "{% static 'images/7.jpg' %}",
+                "{% static 'images/8.jpg' %}",
+                "{% static 'images/9.jpg' %}",
+                "{% static 'images/10.jpg' %}",
+                "{% static 'images/12.jpg' %}",
+                "{% static 'images/11.jpg' %}",
+                "{% static 'images/3.jpg' %}"
+            ];
+            function changeBackground() {
+                var idx = Math.floor(Math.random() * images.length);
+                var imageUrl = images[idx];
+                $('body').css('background-image', 'url(' + imageUrl + ')');
+            }
+            setInterval(changeBackground, 30000);
+            changeBackground(); // Initial background set
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="reservation-form">
+            <h2 class="form-title">Reserve Parking</h2>
+            <div class="alert alert-info">
+                Parking Lot ID: {{ parking_lot.objectid }}
+            </div>
+            {% if parking_lot.lot_type == 'roadside' %}
+            <div class="alert alert-warning">
+                <strong>Parking Information:</strong>
+                <ul>
+                    <li>Weekdays (Monday to Friday): 8am to 7pm</li>
+                    <li>Saturday: 8am to 11am, Free after 11am</li>
+                    <li>Sunday and Bank holidays: Free all day</li>
+                </ul>
+                <strong>Penalties:</strong>
+                <ul>
+                    <li>Overstaying the paid time: £130, £65 if paid within 14 days</li>
+                    <li>Other violations such as not paying or parking in prohibited areas will result in fines</li>
+                </ul>
+            </div>
+        {% elif parking_lot.lot_type == 'public' %}
+            {% if parking_lot.objectid == 157 %}
+                <div class="alert alert-info">
+                    <strong>Baynard House Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> 133 Queen Victoria, London, EC4V 4BQ</li>
+                        <li><strong>Phone:</strong> +44 330 123 5247</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £4.50 per hour, £2500.00 per quarter</li>
+                    </ul>
+                </div>
+            {% elif parking_lot.objectid == 163 %}
+                <div class="alert alert-info">
+                    <strong>Vintry Thames Exchange Park Information:</strong>
+                    <ul>
+                        <li><strong>Address:</strong> Bell Wharf Lane, London, EC4R 3TB</li>
+                        <li><strong>Phone:</strong> +44 345 050 7080</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £4.95 per hour up to £36.95 for 24 hours</li>
+                    </ul>
+                </div>
+                {% elif parking_lot.objectid == 165 %}
+                <div class="alert alert-info">
+                    <strong>Broadgate Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> Primrose Street, City of London, EC2A 2EW</li>
+                        <li><strong>Phone:</strong> +44 20 7920 0816</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £20 2 hours up to £55 for 24 hours</li>
+                    </ul>
+                </div>
+                {% elif parking_lot.objectid == 161 %}
+                <div class="alert alert-info">
+                    <strong>The Barbican Centre Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> Silk Street, London, EC2Y 8DS</li>
+                        <li><strong>Phone:</strong> +44 330 123 5247</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £6 1 hour up to £40 for 24 hours</li>
+                    </ul>
+                </div>
+                {% elif parking_lot.objectid == 160 %}
+                <div class="alert alert-info">
+                    <strong>Smithfield Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> West Smithfield, London, EC1A 9DS</li>
+                        <li><strong>Phone:</strong> +44 20 7283 1501</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £3 per hour up to £4.2 for per hour</li>
+                    </ul>
+                </div>
+                {% elif parking_lot.objectid == 159 %}
+                <div class="alert alert-info">
+                    <strong>Minories Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> 1 Shorter Street, London, E1 8LP</li>
+                        <li><strong>Phone:</strong> +44 330 123 5247</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £4.50 per hour, £2500.00 per quarter</li>
+                    </ul>
+                </div>
+                {% elif parking_lot.objectid == 156 %}
+                <div class="alert alert-info">
+                    <strong>Barbican Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> 158-170 Aldersgate Street, London, EC1A 4HY</li>
+                        <li><strong>Phone:</strong> +44 333 344 4939</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £3 per hour up to £24 for 24 hours</li>
+                    </ul>
+                </div>
+                {% elif parking_lot.objectid == 162 %}
+                <div class="alert alert-info">
+                    <strong>Tower Hill Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> 50 Lower Thames Street, London, EC3R 6DT</li>
+                        <li><strong>Phone:</strong> +44 330 123 5247</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £4.50 per hour, £2500.00 per quarter</li>
+                    </ul>
+                </div>
+                {% elif parking_lot.objectid == 164 %}
+                <div class="alert alert-info">
+                    <strong>Holborn Gate Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> 26 Southampton Buildings, City of London, WC2A 1AH</li>
+                        <li><strong>Phone:</strong> +44 20 7430 9371</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £17 per hour up to £45 for 24 hours</li>
+                    </ul>
+                </div>
+                {% elif parking_lot.objectid == 158 %}
+                <div class="alert alert-info">
+                    <strong>London Wall Park Information:</strong> 
+                    <ul>
+                        <li><strong>Address:</strong> 23 London Wall, London, EC2V 5DY</li>
+                        <li><strong>Phone:</strong> +44 330 123 5247</li>
+                        <li><strong>Operating Hours:</strong> Mon-Sun 24 hours</li>
+                        <li><strong>Pricing:</strong> £4.50 per hour, £2500.00 per quarter</li>
+                    </ul>
+                </div>
+            {% endif %}
+        {% endif %}
+            <form id="reservation-form" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="objectid" name="objectid" value="{{ parking_lot.objectid }}">
+                <div class="form-group">
+                    <label for="start_time">Start Time:</label>
+                    <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_time">End Time:</label>
+                    <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
+                </div>
+                {% if parking_lot.lot_type == 'roadside' %}
+                <div class="form-group">
+                    <label for="vehicle_type">Vehicle Type:</label>
+                    <select class="form-control" id="vehicle_type" name="vehicle_type" required>
+                        {% for value, display in form.vehicle_type.field.choices %}
+                            <option value="{{ value }}">{{ display }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Phone Number:</label>
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="license_plate">License Plate:</label>
+                    <input type="text" class="form-control" id="license_plate" name="license_plate" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price￡:</label>
+                    <input type="text" class="form-control" id="price" name="price" readonly>
+                </div>
+                <button type="submit" class="btn btn-primary">Reserve</button>
+            </form>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function(){
+        $('#start_time').on('change', function(){
+            var objectid = parseInt($('#objectid').val());
+            // Determining if it's an off-street car park
+            if (objectid >= 1 && objectid <= 155) {
+                var startTime = new Date($(this).val());
+                var maxEndTime = new Date(startTime.getTime() + 4 * 3600 * 1000); // behind 4 hours
+                var formattedMaxEndTime = maxEndTime.toISOString().slice(0, 16);
+                $('#end_time').attr('max', formattedMaxEndTime);
+            } else {
+                // Public car parks or other, removal of time limits
+                $('#end_time').removeAttr('max');
+            }
+        });
+
+        $('#end_time').on('change', function(){
+            var startTime = new Date($('#start_time').val());
+            var endTime = new Date($(this).val());
+            var duration = (endTime - startTime) / 1000; // 持续时间，秒
+            var objectid = parseInt($('#objectid').val());
+
+            // 如果是路边停车场且时间超过4小时
+            if (objectid >= 1 && objectid <= 155 && duration > 4 * 3600) {
+                alert('Roadside parking is limited to a maximum of 4 hours.');
+                $('#end_time').val($('#end_time').attr('max'));
+            }
+        });
+
+        $('#start_time, #end_time, #vehicle_type').on('change', function(){
+            var start_time = $('#start_time').val();
+            var end_time = $('#end_time').val();
+            var vehicle_type = $('#vehicle_type').val();
+            var objectid = $('#objectid').val();
+
+            if(start_time && end_time){
+                $.ajax({
+                    url: "{% url 'calculate_price' %}",
+                    method: "POST",
+                    data: {
+                        'start_time': start_time,
+                        'end_time': end_time,
+                        'vehicle_type': vehicle_type,
+                        'objectid': objectid,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response){
+                        console.log("Success response: ", response);
+                        if(response.error) {
+                            alert(response.error);
+                        } else {
+                            $('#price').val(response.price);
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        console.log("Error response: ", xhr.responseText);
+                        alert("Failed to calculate the price. Please check the input data.");
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

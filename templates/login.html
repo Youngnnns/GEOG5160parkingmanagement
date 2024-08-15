@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .bg-image {
+            background-image: url('{% static "images/Login.jpg" %}'); /* */
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .auth-form {
+            max-width: 400px;
+            margin: auto; /* Center vertically and horizontally */
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8); /* Slightly transparent white background */
+            position: absolute; /* Positioning relative to the nearest positioned ancestor (instead of positioned relative to the viewport, like fixed) */
+            top: 50%; /* Push down by half the height of the viewport */
+            left: 50%; /* Push to the right by half the width of the viewport */
+            transform: translate(-50%, -50%); /* Adjust the position by moving it to the left and up by half the width and height of the element */
+            z-index: 2; /* Ensure it's on top */
+            width: auto; /* Default width */
+            text-align: center;
+        }
+        .form-title {
+            margin-bottom: 30px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image"></div>
+
+    <div class="container">
+        <div class="auth-form">
+            <h2 class="form-title">Login</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            {% if error %}
+                <div class="alert alert-danger mt-2">{{ error }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
+

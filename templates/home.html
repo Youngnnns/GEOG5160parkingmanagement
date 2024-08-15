@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <style>
+        #map {
+            height: calc(100vh - 56px);
+            width: 100%;
+        }
+        #query-form {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #auth-links {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+        .popup-card {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            max-width: 300px;
+            font-size: 14px;
+        }
+        .popup-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .popup-body {
+            margin-bottom: 10px;
+        }
+        .btn-custom {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Parking Management</a>
+        <div id="auth-links" class="ml-auto">
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-success">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div id="query-form" class="form-inline">
+        <input type="text" id="postcode" class="form-control mr-2" placeholder="Enter postcode">
+        <button id="search-postcode-btn" class="btn btn-primary">Search</button>
+    </div>
+    <div id="map"></div>
+    <script>
+        const map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        const parkingData = {{ parking_data|safe }};
+        const userLoggedIn = {{ user.is_authenticated|yesno:"true,false" }};
+
+        function onMarkerClick(e) {
+            const parkingLot = e.target.options.parkingLot;
+            let popupContent = `<div class='popup-card'><div class='popup-header'>Parking Lot ID: ${parkingLot.objectid}</div>`;
+            if (parkingLot.lot_type === 'roadside') {
+                popupContent += `<div class='popup-body'><strong>Street:</strong> ${parkingLot.street_name}<br>`;
+                popupContent += `<strong>Address:</strong> ${parkingLot.address}<br>`;
+                popupContent += `<strong>Capacity:</strong> ${parkingLot.capacity}<br>`;
+                popupContent += `<strong>Available Spaces:</strong> ${parkingLot.available_spaces}<br>`;
+                popupContent += `<strong>Maximum Stay:</strong> ${parkingLot.maximum_stay}<br>`;
+                popupContent += `<strong>Electric Or Hydrogen Or Hybrid:</strong> ${parkingLot.electric_or_hydrogen_or_hybrid}<br>`;
+                popupContent += `<strong>Petrol Vehicles Registered From 2005:</strong> ${parkingLot.petrol_vehicles_registered_from_2005}<br>`;
+                popupContent += `<strong>Diesel Vehicles Registered From 2015:</strong> ${parkingLot.diesel_vehicles_registered_from_2015}<br>`;
+                popupContent += `<strong>Other Vehicles:</strong> ${parkingLot.other_vehicles}<br>`;
+                popupContent += `<strong>Saturday AM Price:</strong> ${parkingLot.saturday_am_price}</div>`;
+            } else {
+                popupContent += `<div class='popup-body'><strong>Name:</strong> ${parkingLot.car_park_name}<br>`;
+                popupContent += `<strong>Address:</strong> ${parkingLot.address}<br>`;
+                popupContent += `<strong>Capacity:</strong> ${parkingLot.capacity}<br>`;
+                popupContent += `<strong>Available Spaces:</strong> ${parkingLot.available_spaces}<br>`;
+                popupContent += `<strong>Charges:</strong> ${parkingLot.charges}<br>`;
+                popupContent += `<strong>Postcode:</strong> ${parkingLot.postcode}</div>`;
+            }
+            if (userLoggedIn) {
+                popupContent += `<a href="/reserve/${parkingLot.objectid}/" class='btn btn-custom mt-2'>Reserve</a>`;
+            }
+            popupContent += `<a href="#" onclick="navigateTo(${parkingLot.location[0]}, ${parkingLot.location[1]})" class='btn btn-secondary mt-2'>Navigate</a></div>`;
+
+            e.target.bindPopup(popupContent).openPopup();
+        }
+
+        function addMarkers(parkingLots) {
+            parkingLots.forEach(parkingLot => {
+                let marker;
+                if (parkingLot.geom_type === 'Point') {
+                    marker = L.marker(parkingLot.location, {
+                        parkingLot: parkingLot
+                    }).addTo(map);
+                } else if (parkingLot.geom_type === 'MultiPolygon') {
+                    marker = L.polygon(parkingLot.location, {
+                        parkingLot: parkingLot
+                    }).addTo(map);
+                }
+                marker.on('click', onMarkerClick);
+            });
+        }
+
+        addMarkers(parkingData);
+
+        $('#search-postcode-btn').on('click', function() {
+            const postcode = $('#postcode').val();
+            $.getJSON(`/search_parking/?postcode=${postcode}`, function(data) {
+                if (data.center) {
+                    map.setView(data.center, 18);
+                    if (searchMarker) {
+                        map.removeLayer(searchMarker);
+                    }
+                    searchMarker = L.marker(data.center, { icon: L.icon({
+                        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    })}).addTo(map).bindPopup("Search Result").openPopup();
+
+                    map.eachLayer(function (layer) {
+                        if (layer instanceof L.Marker || layer instanceof L.Polygon) {
+                            map.removeLayer(layer);
+                        }
+                    });
+                    addMarkers(data.parking_lots);
+                } else {
+                    alert(data.error);
+                }
+            });
+        });
+
+        let routingControl; // 全局变量，用于存储路由控制器的实例
+
+function navigateTo(lat, lng) {
+    // Trying to get the user's current location
+    navigator.geolocation.getCurrentPosition(function(position) {
+        const startLat = position.coords.latitude;
+        const startLng = position.coords.longitude;
+        const startLatLng = L.latLng(startLat, startLng); // Use the user's current position as the starting point
+        const endLatLng = L.latLng(lat, lng); // target location
+
+        // Remove the old route controller (if it exists)
+        if (routingControl) {
+            map.removeControl(routingControl);
+        }
+
+        // Create and add a new route controller
+        routingControl = L.Routing.control({
+            waypoints: [startLatLng, endLatLng],
+            routeWhileDragging: true
+        }).addTo(map);
+    }, function(error) {
+        console.error('Geolocation error: ' + error.message);
+        alert('Unable to retrieve your location for navigation. Please ensure location services are enabled.');
+    });
+}
+
+    </script>
+</body>
+</html>
