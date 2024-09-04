@@ -1,14 +1,14 @@
 
 # Parking Management System
-注：该系统已部署在AWS平台，由于注册登录后才可进行预约按钮的显示，您可通过以下账号、密码进行登录（可以不用您自己执行注册）
+注：该系统已部署在AWS平台，您可通过以下链接进入：http://18.175.159.102。由于注册登录后才可进行预约按钮的显示，您可通过以下账号、密码进行登录（可以不用您自己执行注册）
 
-Note: The system is deployed in AWS platform, due to the registration and login before the booking button can be displayed, you can log in through the following account and password (you can not perform the registration yourself)
+Note: The system is deployed in AWS platform, you can access it via the following link: http://18.175.159.102，due to the registration and login before the booking button can be displayed, you can log in through the following account and password (you can not perform the registration yourself)
 
 账号：ZhangSan
 
 Account number: ZhangSan
 
-密码：@A123456
+密码：@A123456y
 
 Password: @A123456
 
