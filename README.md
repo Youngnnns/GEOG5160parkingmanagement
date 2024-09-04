@@ -1,6 +1,6 @@
 
-# WebGIS-based map visualisation system for car park management in London
 # 基于WebGIS的伦敦停车场管理地图可视化系统
+# WebGIS-based map visualisation system for car park management in London
 注：该系统已部署在AWS平台，您可通过以下链接进入：http://18.175.159.102。
 由于注册登录后才可进行预约按钮的显示，您可通过以下账号、密码进行登录（可以不用您自己执行注册）
 
@@ -11,7 +11,7 @@ Due to the registration and login before the booking button can be displayed, yo
 
 Account number: ZhangSan
 
-密码：@A123456y
+密码：@A123456
 
 Password: @A123456
 
