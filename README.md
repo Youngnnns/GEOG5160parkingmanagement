@@ -7,7 +7,7 @@
 Note: The system is deployed in AWS platform, you can access it via the following link: http://18.175.159.102.
 Due to the registration and login before the booking button can be displayed, you can log in through the following account and password (you can not perform the registration yourself)
 
-账号：ZhangSanD
+账号：ZhangSan
 
 Account number: ZhangSan
 
